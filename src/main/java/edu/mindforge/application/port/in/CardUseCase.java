@@ -9,4 +9,5 @@ public interface CardUseCase {
     List<Card> getCardsByTags(List<String> tags);
     List<Card> getCardsForQuiz(String date);
     void answerCard(String cardId, boolean isValid);
+    AnswerResponse answerCard(String cardId, String userAnswer, Boolean forceValidation);
 }
