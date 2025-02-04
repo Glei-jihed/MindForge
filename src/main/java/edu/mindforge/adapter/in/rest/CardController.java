@@ -63,7 +63,7 @@ public class CardController {
         return ResponseEntity.noContent().build();
     }
 
-    // Classes internes pour le mapping du JSON d'entrée
+
 
     public static class CardUserData {
         private String question;
