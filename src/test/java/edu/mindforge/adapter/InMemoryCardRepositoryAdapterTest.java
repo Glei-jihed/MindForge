@@ -1,5 +1,6 @@
+package edu.mindforge.adapter;
 
-
+import edu.mindforge.adapter.out.persistence.InMemoryCardRepositoryAdapter;
 import edu.mindforge.application.port.out.CardRepositoryPort;
 import edu.mindforge.domain.model.Card;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,7 +9,8 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class InMemoryCardRepositoryAdapterTest {
 
@@ -21,11 +23,11 @@ public class InMemoryCardRepositoryAdapterTest {
 
     @Test
     public void testSaveAndFindById() {
-        // Création d'une carte et enregistrement
+
         Card card = new Card("What is Java?", "A programming language", "Programming");
         repository.save(card);
 
-        // Vérifier qu'on peut la retrouver via son ID
+
         Optional<Card> retrieved = repository.findById(card.getId());
         assertTrue(retrieved.isPresent(), "La carte doit être présente dans le repository");
         assertEquals(card.getQuestion(), retrieved.get().getQuestion(), "La question doit correspondre");
