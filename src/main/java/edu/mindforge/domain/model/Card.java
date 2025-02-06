@@ -1,7 +1,5 @@
 package edu.mindforge.domain.model;
 
-
-
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -15,7 +13,6 @@ public class Card {
     private LocalDate lastReviewDate;
     private LocalDate nextReviewDate;
 
-    // Constructeur
     public Card(String question, String answer, String tag) {
         this.id = UUID.randomUUID().toString();
         this.question = question;
@@ -23,7 +20,7 @@ public class Card {
         this.tag = tag;
         this.category = Category.FIRST;
         this.lastReviewDate = null;
-        this.nextReviewDate = LocalDate.now(); // Vous pouvez ajuster la logique ici
+        this.nextReviewDate = LocalDate.now(); // initialisation par défaut
     }
 
     // Getters
@@ -35,10 +32,22 @@ public class Card {
     public LocalDate getLastReviewDate() { return lastReviewDate; }
     public LocalDate getNextReviewDate() { return nextReviewDate; }
 
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
     /**
      * Met à jour la fiche en fonction de la réponse de l'utilisateur.
-     * Pour une réponse correcte, la carte passe à la catégorie suivante (ou DONE si elle était en SEVENTH).
-     * Pour une réponse incorrecte, la carte retourne à la catégorie FIRST.
+     * Si la réponse est correcte, la carte passe à la catégorie suivante et la prochaine date de révision est définie selon l'intervalle:
+     * - FIRST -> SECOND: 2 jours
+     * - SECOND -> THIRD: 4 jours
+     * - THIRD -> FOURTH: 8 jours
+     * - FOURTH -> FIFTH: 16 jours
+     * - FIFTH -> SIXTH: 32 jours
+     * - SIXTH -> SEVENTH: 64 jours
+     * - SEVENTH -> DONE: aucune révision
+     * Si la réponse est incorrecte, la carte retourne en FIRST et la prochaine révision est dans 1 jour.
      *
      * @param isValid true si la réponse est correcte, false sinon.
      */
@@ -46,26 +55,30 @@ public class Card {
         LocalDate today = LocalDate.now();
         this.lastReviewDate = today;
         if (isValid) {
-            // Exemple de logique : si la carte est FIRST, passe à SECOND, etc.
-            // Vous pouvez ajuster les intervalles et la logique de transition selon votre besoin.
             switch (this.category) {
                 case FIRST:
                     this.category = Category.SECOND;
+                    this.nextReviewDate = today.plusDays(2);
                     break;
                 case SECOND:
                     this.category = Category.THIRD;
+                    this.nextReviewDate = today.plusDays(4);
                     break;
                 case THIRD:
                     this.category = Category.FOURTH;
+                    this.nextReviewDate = today.plusDays(8);
                     break;
                 case FOURTH:
                     this.category = Category.FIFTH;
+                    this.nextReviewDate = today.plusDays(16);
                     break;
                 case FIFTH:
                     this.category = Category.SIXTH;
+                    this.nextReviewDate = today.plusDays(32);
                     break;
                 case SIXTH:
                     this.category = Category.SEVENTH;
+                    this.nextReviewDate = today.plusDays(64);
                     break;
                 case SEVENTH:
                     this.category = Category.DONE;
@@ -74,13 +87,9 @@ public class Card {
                 default:
                     break;
             }
-            // Exemple : mise à jour de la date de prochaine révision (ici, ajout d'un jour pour simplifier)
-            this.nextReviewDate = today.plusDays(1);
         } else {
-            // Pour une mauvaise réponse, la carte retourne à FIRST
             this.category = Category.FIRST;
             this.nextReviewDate = today.plusDays(1);
         }
     }
 }
-
