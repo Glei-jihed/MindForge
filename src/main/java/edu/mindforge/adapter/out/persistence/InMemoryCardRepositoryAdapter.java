@@ -3,7 +3,6 @@ package edu.mindforge.adapter.out.persistence;
 import edu.mindforge.application.port.out.CardRepositoryPort;
 import edu.mindforge.domain.model.Card;
 import org.springframework.stereotype.Repository;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
