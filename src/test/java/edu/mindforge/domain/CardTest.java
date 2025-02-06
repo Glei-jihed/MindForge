@@ -19,7 +19,6 @@ public class CardTest {
         Card card = new Card("What is Java?", "A programming language", "Programming");
         LocalDate previousNextReview = card.getNextReviewDate();
         card.answerQuestion(true);
-        // Exemple : la carte passe à SECOND (selon votre logique)
         assertEquals(Category.SECOND, card.getCategory(), "La carte doit passer à la catégorie suivante pour une réponse correcte");
         assertNotEquals(previousNextReview, card.getNextReviewDate(), "La date de prochaine révision doit être mise à jour");
     }
@@ -27,11 +26,24 @@ public class CardTest {
     @Test
     public void testAnswerQuestion_IncorrectResponse() {
         Card card = new Card("What is Java?", "A programming language", "Programming");
-        // Passer en catégorie supérieure pour simuler un quiz réussi
+
         card.answerQuestion(true);
-        // Maintenant simuler une mauvaise réponse
+
         card.answerQuestion(false);
-        // La carte doit revenir en FIRST
+
         assertEquals(Category.FIRST, card.getCategory(), "La carte doit revenir à FIRST en cas de mauvaise réponse");
+    }
+
+    @Test
+    public void testAnswerQuestion_CorrectResponse_RefinedIntervals() {
+        Card card = new Card("What is Java?", "A programming language", "Programming");
+        LocalDate today = LocalDate.now();
+        assertEquals(Category.FIRST, card.getCategory());
+        card.answerQuestion(true);
+        assertEquals(Category.SECOND, card.getCategory());
+        assertEquals(today.plusDays(2), card.getNextReviewDate());
+        card.answerQuestion(true);
+        assertEquals(Category.THIRD, card.getCategory());
+        assertEquals(today.plusDays(4), card.getNextReviewDate());
     }
 }

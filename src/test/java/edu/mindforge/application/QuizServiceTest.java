@@ -17,7 +17,7 @@ public class QuizServiceTest {
     @Test
     public void testStartQuiz_FirstQuizSucceeds() {
         LocalDate today = LocalDate.now();
-        // Le premier quiz doit passer sans exception
+
         assertDoesNotThrow(() -> quizService.startQuiz(today));
         assertEquals(today, quizService.getLastQuizDate(), "La date du dernier quiz doit être enregistrée");
     }
